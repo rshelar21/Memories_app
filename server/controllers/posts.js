@@ -67,13 +67,14 @@ const deletePost = async(req, res) => {
 
 const likePost = async(req, res) => {
     const {id : _id} = req.params
-    const post = req.body
+    // const post = req.body
 
     if(!req.userId) return res.json({message : 'Unauthenticated'})
     try {
         // this is for checking if the post is already liked or not 
         // id check honar k liye string me convert kia h
-        const index = post.likes.findIndex((id) => id === String(req.userId))
+        const post = await posteMessages.findById(_id);
+        const index = await post.likes.findIndex((id) => id === String(req.userId))
         //  -1 means not found
         if(index === -1){
             post.likes.push(req.userId)

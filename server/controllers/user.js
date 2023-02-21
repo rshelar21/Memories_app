@@ -6,16 +6,16 @@ const signIn = async(req, res) => {
     const {email, password} = req.body;
 
     try {
-        const existingUser = await User.findOne({email})
-        console.log(existingUser)
-        if(!existingUser) return res.status(404).json({message : "User doesn't exist"})
+        const result = await User.findOne({email})
+        console.log(result)
+        if(!result) return res.status(404).json({message : "User doesn't exist"})
 
-        const isPassword = await bcrypt.compare(password, existingUser.password)
+        const isPassword = await bcrypt.compare(password, result.password)
         if(!isPassword) return res.status(404).json({message : "Invalid Password"})
 
-        const token = await jwt.sign({email : existingUser.email, id : existingUser._id}, "test", {expiresIn : "1h"})
+        const token = await jwt.sign({email : result.email, id : result._id}, "test", {expiresIn : "1h"})
         console.log(token, 'token')
-        res.status(200).json({ existingUser, token})
+        res.status(200).json({ result, token})
 
 
     } catch(error) {
